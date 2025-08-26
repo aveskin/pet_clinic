@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: 'postgres:14.3-alpine'
+    container_name: 'pet_clinic-postgres'
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=${PET_CLINIC_DB_USERNAME}
+      - POSTGRES_PASSWORD=${PET_CLINIC_DB_PASSWORD}
+      - POSTGRES_DB=${PET_CLINIC_DB_NAME}
