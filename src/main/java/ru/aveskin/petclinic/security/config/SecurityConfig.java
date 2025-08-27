@@ -22,9 +22,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("api/v1/accounts/register").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("api/v1/demo/role-owner-auth").hasRole("OWNER")
-                        .requestMatchers("api/v1/demo/role-admin-auth").hasRole("ADMIN")
-                        .requestMatchers("api/v1/demo/role-vet-auth").hasRole("VET")
+//                        .requestMatchers("api/v1/demo/role-owner-auth").hasRole("OWNER")
+//                        .requestMatchers("api/v1/demo/role-admin-auth").hasRole("ADMIN")
+//                        .requestMatchers("api/v1/demo/role-vet-auth").hasRole("VET")
+                        .requestMatchers("/api/v1/owners/**").hasAnyRole("ADMIN", "OWNER")
+                        .requestMatchers("/api/v1/vets/**").hasAnyRole("ADMIN", "VET")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

@@ -26,6 +26,7 @@ public class IdentityApiServiceImpl implements IdentityApiService {
         String username = authentication.getName();
 
         return service.findUserByUsername(username)
-                .map(userAccount -> new CurrentUserApiModel(userAccount.getId()));
+                .map(userAccount -> new CurrentUserApiModel(userAccount.getId(),
+                        userAccount.getAuthorities()));
     }
 }
