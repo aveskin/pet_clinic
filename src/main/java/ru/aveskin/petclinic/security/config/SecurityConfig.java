@@ -26,18 +26,44 @@ public class SecurityConfig {
 //                        .requestMatchers("api/v1/demo/role-owner-auth").hasRole("OWNER")
 //                        .requestMatchers("api/v1/demo/role-admin-auth").hasRole("ADMIN")
 //                        .requestMatchers("api/v1/demo/role-vet-auth").hasRole("VET")
-                                .requestMatchers(HttpMethod.GET, "/api/v1/owners/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/owners/**").hasAnyRole("ADMIN", "OWNER")
-                                .requestMatchers(HttpMethod.PUT, "/api/v1/owners/**").hasAnyRole("ADMIN", "OWNER")
-                                .requestMatchers(HttpMethod.DELETE, "/api/v1/owners/**").hasAnyRole("ADMIN", "OWNER")
+                                // Owners
+                                .requestMatchers(HttpMethod.GET, "/api/v1/owners/**")
+                                .hasAnyRole("OWNER", "VET", "ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/api/v1/owners/**")
+                                .hasAnyRole("ADMIN", "OWNER")
+
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/owners/**")
+                                .hasAnyRole("ADMIN", "OWNER")
+
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/owners/**")
+                                .hasAnyRole("ADMIN", "OWNER")
+                                // Vets
                                 .requestMatchers(HttpMethod.GET, "/api/v1/vets/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/vets/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/v1/vets/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/vets/**").hasAnyRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/api/v1/pets/my").hasRole("OWNER")
-                                .requestMatchers(HttpMethod.POST, "/api/v1/pets").hasAnyRole("OWNER", "ADMIN")
+                                // Pets
+                                .requestMatchers(HttpMethod.GET, "/api/v1/pets/my")
+                                .hasRole("OWNER")
+
+                                .requestMatchers(HttpMethod.POST, "/api/v1/pets")
+                                .hasAnyRole("OWNER", "ADMIN")
+
                                 .requestMatchers(HttpMethod.PUT, "/api/v1/pets").hasAnyRole("OWNER", "ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/pets").hasAnyRole("OWNER", "ADMIN")
+                                // Visits
+                                .requestMatchers(HttpMethod.GET, "/api/visits", "/api/visits/**")
+                                .hasAnyRole("OWNER", "VET", "ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/api/visits")
+                                .hasAnyRole("VET", "ADMIN")
+
+                                .requestMatchers(HttpMethod.PUT, "/api/visits/**")
+                                .hasAnyRole("VET", "ADMIN")
+
+                                .requestMatchers(HttpMethod.DELETE, "/api/visits/**")
+                                .hasRole("ADMIN")
 
                                 .anyRequest().authenticated()
                 )
