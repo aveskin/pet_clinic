@@ -9,6 +9,7 @@ import ru.aveskin.petclinic.pet.dto.CreatePetRequestDto;
 import ru.aveskin.petclinic.pet.dto.PetResponseDto;
 import ru.aveskin.petclinic.pet.entity.Pet;
 import ru.aveskin.petclinic.pet.mapper.PetRequestCreateToPetMapper;
+import ru.aveskin.petclinic.pet.mapper.PetRequestUpdateToPetMapper;
 import ru.aveskin.petclinic.pet.mapper.PetToPetResponseMapper;
 import ru.aveskin.petclinic.pet.repository.PetRepository;
 import ru.aveskin.petclinic.pet.service.PetService;
@@ -24,6 +25,7 @@ public class PetServiceImpl implements PetService {
     private final PetRepository petRepository;
     private final PetToPetResponseMapper petToPetResponseMapper;
     private final PetRequestCreateToPetMapper petRequestCreateToPetMapper;
+    private final PetRequestUpdateToPetMapper petRequestUpdateToPetMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,6 +62,27 @@ public class PetServiceImpl implements PetService {
     @Override
     @Transactional
     public void delete(Long id) {
+        checkPetAvailability(id);
+        petRepository.deleteById(id);
+    }
+
+    @Override
+    public ChangePetResponseDto update(Long id, ChangePetRequestDto request) {
+        checkPetAvailability(id);
+
+        request.setId(id);
+        Pet changedPet = petRequestUpdateToPetMapper.map(request);
+        petRepository.save(changedPet);
+
+
+        return new ChangePetResponseDto(changedPet.getName(),
+                changedPet.getBirthDate(),
+                changedPet.getSpecies(),
+                changedPet.getBreed(),
+                changedPet.getOwner().getId());
+    }
+
+    private void checkPetAvailability(Long id) {
         var petsOp = petRepository.findById(id);
         Pet pet = petsOp.orElseThrow(() -> new RuntimeException("Pet not found"));
 
@@ -69,13 +92,6 @@ public class PetServiceImpl implements PetService {
                 throw new IllegalArgumentException("Pet does not belong to the Owner");
             }
         }
-        petRepository.deleteById(id);
-    }
-
-    @Override
-    public ChangePetResponseDto update(Long id, ChangePetRequestDto request) {
-        //TODO
-        return null;
     }
 
 

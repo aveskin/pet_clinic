@@ -12,12 +12,5 @@ public class ChangePetRequestDto {
     @NotBlank
     private String name;
 
-    private LocalDate birthDate;
-
-    @NotBlank
-    private String species;
-
-    private String breed;
-
-    private Long ownerId;
+    private Long id;
 }
